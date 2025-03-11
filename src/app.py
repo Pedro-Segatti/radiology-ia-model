@@ -11,8 +11,8 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-kafka_consumer = ImageConsumer()
-kafka_consumer.start()
+# kafka_consumer = ImageConsumer()
+# kafka_consumer.start()
 
 app.register_blueprint(train_bp)
 

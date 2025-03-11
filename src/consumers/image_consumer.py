@@ -4,6 +4,8 @@ import threading
 
 from kafka import KafkaConsumer, errors
 
+from services.predict_service import PredictService
+
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -52,6 +54,9 @@ class ImageConsumer:
             for message in self.consumer:
                 image_data = message.value.decode("utf-8")
                 logging.info(f"Received image data: {image_data}")
+
+                PredictService.predict_image(image_data)
+
                 # Aqui você chamaria a lógica de predição ou processamento da imagem
         except Exception as e:
             logging.error(f"An error occurred during Kafka consumption: {e}")

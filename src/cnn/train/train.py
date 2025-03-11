@@ -2,19 +2,28 @@ import os
 
 import numpy as np
 import tensorflow as tf
-from data.augment import AugmentData
-from data.preproccess import PreProccessData
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
 
+from cnn.data.augment import AugmentData
+from cnn.data.preproccess import PreProccessData
+
 
 class Train:
     def __init__(
-        self, model, data_dir, input_shape, num_classes, epochs=10, batch_size=32
+        self,
+        model,
+        model_path,
+        data_path,
+        input_shape=(128, 128, 128, 3),
+        num_classes=0.2,
+        epochs=10,
+        batch_size=32,
     ):
         self.model = model
-        self.data_dir = data_dir
+        self.model_path = model_path
+        self.data_path = data_path
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.epochs = epochs
@@ -33,8 +42,8 @@ class Train:
         labels = []
 
         # Carrega imagens e rótulos
-        for class_dir in os.listdir(self.data_dir):
-            class_path = os.path.join(self.data_dir, class_dir)
+        for class_dir in os.listdir(self.data_path):
+            class_path = os.path.join(self.data_path, class_dir)
             if os.path.isdir(class_path):
                 for img_name in os.listdir(class_path):
                     img_path = os.path.join(class_path, img_name)
@@ -62,7 +71,7 @@ class Train:
 
     def train_model(self):
         train_gen, val_gen = PreProccessData(
-            self.data_dir, target_size=self.input_shape[:2], batch_size=self.batch_size
+            self.data_path, target_size=self.input_shape[:2], batch_size=self.batch_size
         ).preprocess_data()
 
         self.model.compile(
@@ -74,5 +83,6 @@ class Train:
 
         history = self.model.fit(train_gen, validation_data=val_gen, epochs=self.epochs)
 
-        self.model.save("tests/saved_models/final_model.keras")
+        print("aquiiiii")
+        self.model.save(self.model_path)
         return history
