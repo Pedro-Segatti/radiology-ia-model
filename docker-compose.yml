@@ -9,7 +9,7 @@ services:
       KAFKA_PROCESS_ROLES: controller,broker
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092 # <- Alterado aqui
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
     ports:
@@ -28,13 +28,16 @@ services:
     networks:
       - kafka-network
 
-  api:
+  app:
     build: .
-    container_name: flask-api
     depends_on:
       - kafka-init
     ports:
-      - '5000:5000'
+      - "5000:5000"
+    volumes:
+      - ./src:/src
+    env_file:
+      - .env
     networks:
       - kafka-network
 

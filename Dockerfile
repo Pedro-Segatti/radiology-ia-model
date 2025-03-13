@@ -1,19 +1,27 @@
-# Usando a imagem oficial do Python
-FROM python:3.11-slim
+# Usando a imagem oficial do Python como base
+FROM python:3.9-slim
 
-# Definindo o diretório de trabalho dentro do container
+# Definindo o diretório de trabalho dentro do contêiner para a pasta src
 WORKDIR /app
 
-# Copiando arquivos necessários
-COPY requirements.txt .
-COPY src/ ./src/
-COPY config.yaml .
+# Copiar o arquivo de requisitos para dentro do contêiner
+COPY requirements.txt /app
 
-# Instalando dependências
+# Instalar as dependências
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expondo a porta da API Flask
+# Copiar o código da aplicação para o contêiner
+COPY . /app
+
+# Definir variáveis de ambiente
+ENV FLASK_APP=src/app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_DEBUG=1
+ENV FLASK_ENV=development
+ENV PYTHONUNBUFFERED=1
+
+# Expor a porta em que a aplicação vai rodar
 EXPOSE 5000
 
-# Comando para rodar a API
-CMD ["python3", "-m", "flask", "--app", "src/app:app", "run", "--host=0.0.0.0"]
+# Comando para rodar a aplicação
+CMD ["flask", "run"]

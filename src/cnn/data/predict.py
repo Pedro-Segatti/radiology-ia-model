@@ -8,16 +8,16 @@ from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
 class Predict:
 
-    def __init__(self, model, target_size=(128, 128, 3)):
+    def __init__(self, model, target_size=(256, 256, 1)):
         self.model = model
         self.target_size = target_size
 
     def _load_image_from_path(self, image_path):
-        return load_img(image_path, target_size=self.target_size)
+        return load_img(image_path, color_mode="grayscale", target_size=self.target_size[:2])
 
     def _load_image_from_base64(self, image_base64):
         image_data = base64.b64decode(image_base64)
-        image = Image.open(BytesIO(image_data)).convert("RGB")
+        image = Image.open(BytesIO(image_data)).convert("L")
         image = image.resize(self.target_size[:2])
         return image
 
@@ -33,6 +33,10 @@ class Predict:
         image_array = img_to_array(image) / 255.0
         image_array = np.expand_dims(image_array, axis=0)
 
+        # Adiciona dimensão de canal para imagem em tons de cinza
+        if self.target_size[2] == 1:
+            image_array = np.expand_dims(image_array, axis=-1)
+
         # Fazer a previsão
         predictions = self.model.predict(image_array)
 
@@ -40,7 +44,7 @@ class Predict:
         if hasattr(self.model, "classes_"):
             class_names = self.model.classes_
         else:
-            class_names = [f"Classe {i}" for i in range(predictions.shape[1])]
+            class_names = ["compression", "normal"]
         print(f"Classes disponíveis no modelo: {class_names}")
 
         # Exibir probabilidades de cada classe

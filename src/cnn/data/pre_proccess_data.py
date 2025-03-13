@@ -5,30 +5,30 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
 class PreProccessData:
-    def __init__(self, data_dir, target_size=(128, 128, 3), batch_size=32):
+    def __init__(self, data_dir, target_size=(256, 256, 1), batch_size=2):
         self.data_dir = data_dir
         self.target_size = target_size
         self.batch_size = batch_size
 
     def preprocess_data(self):
-        datagen = ImageDataGenerator(rescale=1.0 / 255, validation_split=0.5)
+        datagen = ImageDataGenerator(
+            rescale=1.0 / 255,
+            validation_split=0.2         )
 
         train_gen = datagen.flow_from_directory(
-            directory=self.data_dir,
-            target_size=self.target_size,
+            directory=os.path.join(self.data_dir, "train"),
+            target_size=self.target_size[:2],
             batch_size=self.batch_size,
             class_mode="categorical",
-            color_mode="rgb",
-            subset="training",
+            color_mode="grayscale", 
         )
 
         val_gen = datagen.flow_from_directory(
-            directory=self.data_dir,
-            target_size=self.target_size,
+            directory=os.path.join(self.data_dir, "validation"),
+            target_size=self.target_size[:2],
             batch_size=self.batch_size,
             class_mode="categorical",
-            color_mode="rgb",
-            subset="validation",
+            color_mode="grayscale",
         )
 
         return train_gen, val_gen

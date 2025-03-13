@@ -25,7 +25,6 @@ class PredictService:
             predict.predict(image, "base64")
         )
 
-        # Validar se é normal ou com problema com base na classe e probabilidade
         if predicted_class_name == "normal" and predicted_probability > 0.5:
             print("A imagem é normal.")
         elif predicted_class_name == "compression" and predicted_probability > 0.5:
@@ -35,4 +34,4 @@ class PredictService:
                 "O modelo não tem certeza sobre a classificação. Probabilidade abaixo de 50%."
             )
 
-        return ""
+        return predicted_class, predicted_class_name, predicted_probability, predictions

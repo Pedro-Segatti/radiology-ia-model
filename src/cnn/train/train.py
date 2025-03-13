@@ -1,5 +1,4 @@
 import os
-
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
@@ -7,7 +6,6 @@ from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
 
 from cnn.data.augment import AugmentData
-from cnn.data.preproccess import PreProccessData
 
 
 class Train:
@@ -16,18 +14,22 @@ class Train:
         model,
         model_path,
         data_path,
-        input_shape=(128, 128, 128, 3),
-        num_classes=0.2,
-        epochs=10,
+        input_shape=(256, 256, 1),
+        num_classes=0,
+        epochs=25,
         batch_size=32,
+        test_size=0.2,
+        random_state=42
     ):
         self.model = model
         self.model_path = model_path
-        self.data_path = data_path
+        self.data_path = f"{data_path}/train"
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.epochs = epochs
         self.batch_size = batch_size
+        self.test_size = test_size
+        self.random_state = random_state
 
         self.x_train, self.x_test, self.y_train, self.y_test = self.load_data()
 
@@ -37,52 +39,49 @@ class Train:
 
         :return: Tupla contendo os dados de treinamento e teste.
         """
-        # Inicializa listas para imagens e rótulos
         images = []
         labels = []
 
-        # Carrega imagens e rótulos
         for class_dir in os.listdir(self.data_path):
             class_path = os.path.join(self.data_path, class_dir)
             if os.path.isdir(class_path):
                 for img_name in os.listdir(class_path):
                     img_path = os.path.join(class_path, img_name)
                     img = tf.keras.preprocessing.image.load_img(
-                        img_path, target_size=(128, 128, 3)
+                        img_path, color_mode='grayscale', target_size=self.input_shape[:2]
                     )
                     img_array = tf.keras.preprocessing.image.img_to_array(img)
                     images.append(img_array)
-                    labels.append(class_dir)  # Usa o nome da pasta como label
-                    print("Imagem carregada:", img_name, "| Classe:", class_dir)
+                    labels.append(class_dir)
 
-        # Converte listas para arrays numpy
-        images = np.array(images, dtype="float32") / 255.0  # Normalização
+        images = np.array(images, dtype='float32') / 255.0
 
         label_encoder = LabelEncoder()
         encoded_labels = label_encoder.fit_transform(labels)
         self.model.classes_ = label_encoder.classes_
 
-        # Converte os rótulos numéricos para one-hot encoding
         num_classes = len(label_encoder.classes_)
-
         labels = to_categorical(encoded_labels, num_classes=num_classes)
-        # Divide os dados em treinamento e teste
-        return train_test_split(images, labels, test_size=0.2, random_state=42)
+
+        return train_test_split(images, labels, test_size=self.test_size, random_state=self.random_state)
 
     def train_model(self):
-        train_gen, val_gen = PreProccessData(
-            self.data_path, target_size=self.input_shape[:2], batch_size=self.batch_size
-        ).preprocess_data()
-
-        self.model.compile(
-            optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"]
-        )
-
         datagen = AugmentData().augment_data()
         datagen.fit(self.x_train)
 
-        history = self.model.fit(train_gen, validation_data=val_gen, epochs=self.epochs)
+        self.model.compile(
+            optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
+            loss='categorical_crossentropy',
+            metrics=['accuracy']
+        )
 
-        print("aquiiiii")
+        history = self.model.fit(
+            datagen.flow(self.x_train, self.y_train, batch_size=self.batch_size),
+            validation_data=(self.x_test, self.y_test),
+            epochs=self.epochs,
+            steps_per_epoch=len(self.x_train) // self.batch_size,
+            validation_steps=len(self.x_test) // self.batch_size
+        )
+
         self.model.save(self.model_path)
         return history

@@ -3,7 +3,7 @@ from tensorflow.keras.models import Sequential
 
 
 class RadiologyModel:
-    def __init__(self, input_shape=(128, 128, 128, 3), num_classes=2):
+    def __init__(self, input_shape=(256, 256, 1), num_classes=2):
         """
         Inicializa a classe do modelo CNN.
 
@@ -32,11 +32,15 @@ class RadiologyModel:
         model.add(Conv2D(128, (3, 3), activation="relu"))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
+        # Quarta camada convolucional adicional
+        model.add(Conv2D(256, (3, 3), activation="relu"))
+        model.add(MaxPooling2D(pool_size=(2, 2)))
+
         # Flatten (camada para transformar em vetor)
         model.add(Flatten())
 
         # Camada densa totalmente conectada
-        model.add(Dense(128, activation="relu"))
+        model.add(Dense(256, activation="relu"))
         model.add(Dropout(0.5))  # Dropout para evitar overfitting
 
         # Camada de saída (usando softmax para classificação)

@@ -1,8 +1,0 @@
-data:
-  train_path: "data/processed/train"
-  val_path: "data/processed/val"
-  test_path: "data/processed/test"
-training:
-  epochs: 20
-  batch_size: 32
-  learning_rate: 0.001

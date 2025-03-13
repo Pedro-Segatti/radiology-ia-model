@@ -1,18 +1,19 @@
-from cnn.data.preproccess import PreProccessData
+from cnn.data.pre_proccess_data import PreProccessData
 
 
 class ValidateTrain:
 
-    def __init__(self, model, data_path, input_shape=(128, 128, 128, 3)):
+    def __init__(self, model, data_path, input_shape=(256, 256, 1)):
         self.model = model
         self.data_path = data_path
         self.input_shape = input_shape
 
     def validate_model(self):
-        _, val_gen = PreProccessData(
-            self.data_path, target_size=self.input_shape[:2]
-        ).preprocess_data()
+        # Processa os dados e retorna geradores de treinamento e validação, além dos pesos das classes
+        _, val_gen = PreProccessData(self.data_path).preprocess_data()
 
         loss, accuracy = self.model.evaluate(val_gen)
+
         print(f"Validation Loss: {loss:.4f}, Validation Accuracy: {accuracy:.4f}")
         return loss, accuracy
+
