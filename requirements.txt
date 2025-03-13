@@ -1,0 +1,10 @@
+dotenv
+flask
+flask-cors
+tensorflow
+numpy
+pandas
+matplotlib
+scikit-learn
+opencv-python
+kafka-python
