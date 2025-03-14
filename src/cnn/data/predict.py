@@ -45,17 +45,10 @@ class Predict:
             class_names = self.model.classes_
         else:
             class_names = ["compression", "normal"]
-        print(f"Classes disponíveis no modelo: {class_names}")
-
-        # Exibir probabilidades de cada classe
-        print("Probabilidades para cada classe:", predictions)
 
         # Encontrar a classe com maior probabilidade
         predicted_class = np.argmax(predictions)
         predicted_class_name = class_names[predicted_class]
         predicted_probability = predictions[0][predicted_class]
-
-        print(f"Classe predita: {predicted_class_name}")
-        print(f"Probabilidade da classe predita: {predicted_probability:.2f}")
 
         return predicted_class, predicted_class_name, predicted_probability, predictions

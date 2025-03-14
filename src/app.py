@@ -4,11 +4,15 @@ from dotenv import load_dotenv
 from flask import Flask, Blueprint
 from flask_cors import CORS
 
-from consumers.image_consumer import ImageConsumer
+from kafka_iterators.image_consumer import ImageConsumer
 from routes.train import train_bp
 from routes.predict import predict_bp
 
 load_dotenv()
+
+kafka_consumer = ImageConsumer()
+kafka_consumer.start()
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
