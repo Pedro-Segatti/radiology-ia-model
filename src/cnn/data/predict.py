@@ -16,6 +16,9 @@ class Predict:
         return load_img(image_path, color_mode="grayscale", target_size=self.target_size[:2])
 
     def _load_image_from_base64(self, image_base64):
+        if "," in image_base64:
+            image_base64 = image_base64.split(",")[1]
+
         image_data = base64.b64decode(image_base64)
         image = Image.open(BytesIO(image_data)).convert("L")
         image = image.resize(self.target_size[:2])

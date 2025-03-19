@@ -1,6 +1,7 @@
 import os
 import threading
 import json
+import traceback
 
 from kafka import KafkaConsumer, errors
 
@@ -67,6 +68,8 @@ class ImageConsumer:
                     self.producer.send_response(json.dumps(response))
                     print(f"Sent response to topic {self.response_topic}: {response}")
                 except Exception as e:
+                    traceback.print_exc()
+
                     message_value = json.loads(message.value.decode('utf-8'))
                     conversion_id = message_value['conversion_id']
 
