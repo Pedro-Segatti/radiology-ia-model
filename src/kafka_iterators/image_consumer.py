@@ -48,10 +48,10 @@ class ImageConsumer:
             for message in self.consumer:
                 try:
                     message_value = json.loads(message.value.decode('utf-8'))
-                    conversion_id = message_value['conversion_id']
+                    analysis_id = message_value['analysis_id']
                     image_data = message_value['image'] 
 
-                    print(f"Received image data: {conversion_id}")
+                    print(f"Received image data: {analysis_id}")
 
                     _, predicted_class_name, predicted_probability, _ = PredictService.predict_image(image_data)
 
@@ -59,7 +59,7 @@ class ImageConsumer:
                         "success": True,
                         "message": "Image Successfully Classified",
                         "data": {
-                            "conversion_id": conversion_id,
+                            "analysis_id": analysis_id,
                             "class": predicted_class_name,
                             "probability": float(predicted_probability)
                         }
@@ -71,13 +71,13 @@ class ImageConsumer:
                     traceback.print_exc()
 
                     message_value = json.loads(message.value.decode('utf-8'))
-                    conversion_id = message_value['conversion_id']
+                    analysis_id = message_value['analysis_id']
 
                     response = {
                         "success": False,
                         "message": "Image Cannot be Classified",
                         "data": {
-                            "conversion_id": conversion_id,
+                            "analysis_id": analysis_id,
                         }
                     }
 
