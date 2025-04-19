@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radiology-ia-model
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: radiology-ia-model
+  template:
+    metadata:
+      labels:
+        app: radiology-ia-model
+    spec:
+      containers:
+        - name: consumidor-ia-model
+          image: consumidor-ia-model:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: model-secrets
