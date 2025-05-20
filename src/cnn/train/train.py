@@ -15,9 +15,9 @@ class Train:
         model_path,
         data_path,
         input_shape=(256, 256, 1),
-        num_classes=0,
-        epochs=25,
-        batch_size=32,
+        num_classes=3,
+        epochs=75,
+        batch_size=2,
         test_size=0.2,
         random_state=42
     ):

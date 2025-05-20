@@ -47,7 +47,7 @@ class Predict:
         if hasattr(self.model, "classes_"):
             class_names = self.model.classes_
         else:
-            class_names = ["compression", "normal"]
+            class_names = ["compression", "normal", "undefined"]
 
         # Encontrar a classe com maior probabilidade
         predicted_class = np.argmax(predictions)

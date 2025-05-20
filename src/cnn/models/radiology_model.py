@@ -3,7 +3,7 @@ from tensorflow.keras.models import Sequential
 
 
 class RadiologyModel:
-    def __init__(self, input_shape=(256, 256, 1), num_classes=2):
+    def __init__(self, input_shape=(256, 256, 1), num_classes=3):
         """
         Inicializa a classe do modelo CNN.
 
