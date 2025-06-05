@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Tutorial de Configuração</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f6fa;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #ddd;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .explanation-box {
+            background-color: #e2e8f0;
+            color: #1e293b;
+            padding: 12px 16px;
+            border-left: 4px solid #6366f1;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .command-container {
+            position: relative;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-family: monospace;
+        }
+
+        .command-container .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #6366f1;
+            border: none;
+            padding: 6px 12px;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .command-line {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .command-line span {
+            white-space: pre;
+        }
+
+        .dollar {
+            color: #9ca3af;
+        }
+
+        .highlight {
+            color: #facc15;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Tutorial de Configuração</h1>
+
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('linux')">Linux</div>
+        <div class="tab" onclick="showTab('windows')">Windows</div>
+    </div>
+
+    <div id="linux" class="content active">
+        <div class="explanation-box">
+            Atualiza a lista de pacotes disponíveis do sistema.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> sudo apt update</div>
+            <button class="copy-btn" onclick="copyText('sudo apt update', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Instala ferramentas necessárias como curl, transport HTTPS e o VirtualBox.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> sudo apt install -y curl apt-transport-https
+                virtualbox virtualbox-ext-pack</div>
+            <button class="copy-btn"
+                onclick="copyText('sudo apt install -y curl apt-transport-https virtualbox virtualbox-ext-pack', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Baixa o instalador do Minikube para Linux.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> curl -LO
+                https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+            </div>
+            <button class="copy-btn"
+                onclick="copyText('curl -LO https\:\/\/github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Instala manualmente o binário do Minikube e remove o arquivo baixado.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> sudo install minikube-linux-amd64
+                /usr/local/bin/minikube && rm minikube-linux-amd64</div>
+            <button class="copy-btn"
+                onclick="copyText('sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Inicia o cluster local com o Minikube.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> minikube start</div>
+            <button class="copy-btn" onclick="copyText('minikube start', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Baixa a última versão estável do kubectl.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> curl -LO "https://dl.k8s.io/release/$(curl -L -s
+                https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"</div>
+            <button class="copy-btn"
+                onclick='copyText("curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\"", this)'>Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Torna o kubectl executável.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> chmod +x kubectl</div>
+            <button class="copy-btn" onclick="copyText('chmod +x kubectl', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Move o kubectl para o PATH do sistema.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> sudo mv kubectl /usr/local/bin/</div>
+            <button class="copy-btn" onclick="copyText('sudo mv kubectl /usr/local/bin/', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Clona o repositório do projeto com todos os arquivos.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> git clone
+                https://github.com/Pedro-Segatti/radiology-docker-orchestrator.git</div>
+            <button class="copy-btn"
+                onclick="copyText('git clone https://github.com/Pedro-Segatti/radiology-docker-orchestrator.git', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Inicializa os submódulos do projeto.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> git submodule update --init --recursive</div>
+            <button class="copy-btn" onclick="copyText('git submodule update --init --recursive', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Inicia os containers definidos no `docker-compose`.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> docker-compose up</div>
+            <button class="copy-btn" onclick="copyText('docker-compose up', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Entra no diretório do modelo de IA.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> cd radiology-ia-model</div>
+            <button class="copy-btn" onclick="copyText('cd radiology-ia-model', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Constrói a imagem Docker para o modelo.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> docker build -t radiology-ia-model:v1 .</div>
+            <button class="copy-btn" onclick="copyText('docker build -t radiology-ia-model:v1 .', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Carrega a imagem no ambiente do Minikube.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> minikube image load radiology-ia-model:v1</div>
+            <button class="copy-btn"
+                onclick="copyText('minikube image load radiology-ia-model:v1', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Aplica a configuração de deployment do Kubernetes.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> kubectl apply -f radiology-ia-model-deployment.yaml
+            </div>
+            <button class="copy-btn"
+                onclick="copyText('kubectl apply -f radiology-ia-model-deployment.yaml', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Aplica o service do Kubernetes para expor o modelo.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> kubectl apply -f radiology-ia-model-service.yaml
+            </div>
+            <button class="copy-btn"
+                onclick="copyText('kubectl apply -f radiology-ia-model-service.yaml', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Verifica os pods em execução.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> kubectl get pods</div>
+            <button class="copy-btn" onclick="copyText('kubectl get pods', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Inicia o túnel de rede para acesso externo ao serviço.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> minikube tunnel</div>
+            <button class="copy-btn" onclick="copyText('minikube tunnel', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Abre o painel gráfico do Minikube.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> minikube dashboard</div>
+            <button class="copy-btn" onclick="copyText('minikube dashboard', this)">Copiar</button>
+        </div>
+    </div>
+
+    <div id="windows" class="content">
+        <div class="explanation-box">
+            Instala o Minikube no Windows criando a pasta e baixando o executável.
+        </div>
+
+        <div class="explanation-box">
+            LEMBRE-SE .Adicione C:\minikube no Path em variáveis de ambiente
+        </div>
+
+        <div class="command-container">
+            <div class="command-line">
+                <span class="dollar">PS></span>
+                New-Item -Path 'c:\' -Name 'minikube' -ItemType Directory -Force
+            </div>
+            <div class="command-line">
+                <span class="dollar">PS></span>
+                Invoke-WebRequest -OutFile 'c:\minikube\minikube.exe' -Uri
+                'https://github.com/kubernetes/minikube/releases/latest/download/minikube-windows-amd64.exe'
+                -UseBasicParsing
+            </div>
+            <button class="copy-btn"
+                onclick="copyText(`New-Item -Path 'c:\\' -Name 'minikube' -ItemType Directory -Force
+Invoke-WebRequest -OutFile 'c:\\minikube\\minikube.exe' -Uri 'https://github.com/kubernetes/minikube/releases/latest/download/minikube-windows-amd64.exe' -UseBasicParsing`, this)">
+                Copiar
+            </button>
+        </div>
+
+        <div class="explanation-box">
+            Clona o repositório do projeto com todos os arquivos.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> git clone
+                https://github.com/Pedro-Segatti/radiology-docker-orchestrator.git</div>
+            <button class="copy-btn"
+                onclick="copyText('git clone https://github.com/Pedro-Segatti/radiology-docker-orchestrator.git', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Inicializa os submódulos do projeto.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> git submodule update --init --recursive</div>
+            <button class="copy-btn" onclick="copyText('git submodule update --init --recursive', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Inicia o cluster local com o Minikube.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> minikube start</div>
+            <button class="copy-btn" onclick="copyText('minikube start', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Inicia os containers definidos no `docker-compose`.
+        </div>
+        <div class="explanation-box">
+            Posiciona-se no diretório do modelo de IA.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> docker-compose up</div>
+            <button class="copy-btn" onclick="copyText('docker-compose up', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Constrói a imagem Docker para o modelo.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> docker build -t radiology-ia-model:v1 .</div>
+            <button class="copy-btn" onclick="copyText('docker build -t radiology-ia-model:v1 .', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Carrega a imagem no ambiente do Minikube.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> minikube image load radiology-ia-model:v1</div>
+            <button class="copy-btn"
+                onclick="copyText('minikube image load radiology-ia-model:v1', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Se o load model der erro, use o comando abaixo para forçar o carregamento da imagem.
+        </div>
+        <div class="explanation-box">
+            Esse comando entra no terminal do docker dentro do container do minikube
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span>
+                & minikube -p minikube docker-env --shell powershell | Invoke-Expression
+            </div>
+            <button class="copy-btn"
+                onclick="copyText('& minikube -p minikube docker-env --shell powershell | Invoke-Expression', this)">Copiar</button>
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span>
+                docker build -t radiology-ia-model:v1 .
+            </div>
+            <button class="copy-btn"
+                onclick="copyText('docker build -t radiology-ia-model:v1 .', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Use outro terminal
+        </div>
+
+        <div class="explanation-box">
+            Aplica a configuração de deployment do Kubernetes.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> kubectl apply -f radiology-ia-model-deployment.yaml
+            </div>
+            <button class="copy-btn"
+                onclick="copyText('kubectl apply -f radiology-ia-model-deployment.yaml', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Aplica o service do Kubernetes para expor o modelo.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> kubectl apply -f radiology-ia-model-service.yaml
+            </div>
+            <button class="copy-btn"
+                onclick="copyText('kubectl apply -f radiology-ia-model-service.yaml', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Verifica os pods em execução.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> kubectl get pods</div>
+            <button class="copy-btn" onclick="copyText('kubectl get pods', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Inicia o túnel de rede para acesso externo ao serviço.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> minikube tunnel</div>
+            <button class="copy-btn" onclick="copyText('minikube tunnel', this)">Copiar</button>
+        </div>
+
+        <div class="explanation-box">
+            Abre o painel gráfico do Minikube.
+        </div>
+        <div class="command-container">
+            <div class="command-line"><span class="dollar">$</span> minikube dashboard</div>
+            <button class="copy-btn" onclick="copyText('minikube dashboard', this)">Copiar</button>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".content").forEach(c => c.classList.remove("active"));
+            document.querySelector(`.tab[onclick*="${tabId}"]`).classList.add("active");
+            document.getElementById(tabId).classList.add("active");
+        }
+
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const original = btn.innerText;
+                btn.innerText = 'Copiado!';
+                setTimeout(() => btn.innerText = original, 1500);
+            });
+        }
+    </script>
+
+</body>
+
+</html>
