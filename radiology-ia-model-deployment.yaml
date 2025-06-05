@@ -13,11 +13,7 @@ spec:
         app: radiology-ia-model
     spec:
       containers:
-        - name: consumidor-ia-model
-          image: consumidor-ia-model:latest
-          imagePullPolicy: Never
+        - name: radiology-ia-model
+          image: radiology-ia-model:v1
           ports:
             - containerPort: 5000
-          envFrom:
-            - secretRef:
-                name: model-secrets
