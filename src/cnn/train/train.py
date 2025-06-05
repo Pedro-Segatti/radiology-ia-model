@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
@@ -82,6 +83,32 @@ class Train:
             steps_per_epoch=len(self.x_train) // self.batch_size,
             validation_steps=len(self.x_test) // self.batch_size
         )
+        self.save_loss_accuracy_plot(history)
 
         self.model.save(self.model_path)
         return history
+
+    def save_loss_accuracy_plot(self, history, filename="static/loss_accuracy.png"):
+        plt.figure(figsize=(10, 5))
+        
+        # Curva de perda
+        plt.subplot(1, 2, 1)
+        plt.plot(history.history['loss'], label='Treinamento')
+        plt.plot(history.history['val_loss'], label='Validação')
+        plt.title("Perda")
+        plt.xlabel("Época")
+        plt.ylabel("Loss")
+        plt.legend()
+
+        # Curva de acurácia
+        plt.subplot(1, 2, 2)
+        plt.plot(history.history['accuracy'], label='Treinamento')
+        plt.plot(history.history['val_accuracy'], label='Validação')
+        plt.title("Acurácia")
+        plt.xlabel("Época")
+        plt.ylabel("Acurácia")
+        plt.legend()
+
+        plt.tight_layout()
+        plt.savefig(filename)
+        plt.close()
