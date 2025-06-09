@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.preprocessing import label_binarize
 from cnn.data.pre_proccess_data import PreProccessData
 
@@ -11,14 +10,14 @@ from cnn.data.pre_proccess_data import PreProccessData
 class ValidateTrain:
     def __init__(self, model, data_path, input_shape=(256, 256, 1), output_dir="output"):
         self.model = model
-        self.data_path = data_path
+        self.data_path = data_path  # <- caminho raiz, contendo train/ e validation/
         self.input_shape = input_shape
         self.output_dir = output_dir
         os.makedirs(output_dir, exist_ok=True)
 
     def validate_model(self):
-        # Carrega dados
-        _, val_gen = PreProccessData(self.data_path).preprocess_data()
+        # Usa apenas o val_gen agora, pois você já separou os dados
+        _, val_gen = PreProccessData(self.data_path, target_size=self.input_shape[:2]).preprocess_data()
 
         # Avaliação simples
         loss, accuracy = self.model.evaluate(val_gen, verbose=1)
@@ -30,7 +29,7 @@ class ValidateTrain:
         y_true = val_gen.classes
         class_labels = list(val_gen.class_indices.keys())
 
-        # Geração dos gráficos
+        # Geração dos gráficos e relatórios
         self._generate_classification_report(y_true, y_pred, class_labels)
         self._generate_confusion_matrix(y_true, y_pred, class_labels)
         self._generate_roc_curve(y_true, y_prob, class_labels)
@@ -41,8 +40,7 @@ class ValidateTrain:
     def _generate_classification_report(self, y_true, y_pred, class_labels, filename="static/classification_report.txt"):
         report = classification_report(y_true, y_pred, target_names=class_labels)
         print(report)
-        path = os.path.join(filename)
-        with open(path, "w") as f:
+        with open(filename, "w") as f:
             f.write(report)
 
     def _generate_confusion_matrix(self, y_true, y_pred, class_labels, filename="static/confusion_matrix.png"):

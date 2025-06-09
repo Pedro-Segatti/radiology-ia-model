@@ -1,8 +1,5 @@
 import os
-
-import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-
 
 class PreProccessData:
     def __init__(self, data_dir, target_size=(256, 256, 1), batch_size=2):
@@ -11,16 +8,15 @@ class PreProccessData:
         self.batch_size = batch_size
 
     def preprocess_data(self):
-        datagen = ImageDataGenerator(
-            rescale=1.0 / 255,
-            validation_split=0.2         )
+        datagen = ImageDataGenerator(rescale=1.0 / 255)
 
         train_gen = datagen.flow_from_directory(
             directory=os.path.join(self.data_dir, "train"),
             target_size=self.target_size[:2],
             batch_size=self.batch_size,
             class_mode="categorical",
-            color_mode="grayscale", 
+            color_mode="grayscale",
+            shuffle=True
         )
 
         val_gen = datagen.flow_from_directory(
@@ -29,6 +25,7 @@ class PreProccessData:
             batch_size=self.batch_size,
             class_mode="categorical",
             color_mode="grayscale",
+            shuffle=False  # Mantido para métricas
         )
 
         return train_gen, val_gen

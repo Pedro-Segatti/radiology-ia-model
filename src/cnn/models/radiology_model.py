@@ -1,14 +1,13 @@
 from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from tensorflow.keras.models import Sequential
-
+from tensorflow.keras.regularizers import l2
 
 class RadiologyModel:
     def __init__(self, input_shape=(256, 256, 1), num_classes=3):
         """
         Inicializa a classe do modelo CNN.
-
-        :param input_shape: Tuple representando as dimensões de entrada (altura, largura, canais).
-        :param num_classes: Número de classes para a camada de saída.
+        :param input_shape: Dimensão da imagem de entrada (ex: 256x256x1 para grayscale)
+        :param num_classes: Número de classes (ex: compressão, normal, indefinido)
         """
         self.input_shape = input_shape
         self.num_classes = num_classes
@@ -16,35 +15,27 @@ class RadiologyModel:
 
     def build_model(self):
         """
-        Constrói o modelo CNN.
+        Constrói a arquitetura da rede neural convolucional.
         """
         model = Sequential()
 
-        # Primeira camada convolucional
+        # Camadas convolucionais reduzidas
         model.add(Conv2D(32, (3, 3), activation="relu", input_shape=self.input_shape))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
-        # Segunda camada convolucional
         model.add(Conv2D(64, (3, 3), activation="relu"))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
-        # Terceira camada convolucional
         model.add(Conv2D(128, (3, 3), activation="relu"))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
-        # Quarta camada convolucional adicional
-        model.add(Conv2D(256, (3, 3), activation="relu"))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-
-        # Flatten (camada para transformar em vetor)
         model.add(Flatten())
 
-        # Camada densa totalmente conectada
-        model.add(Dense(256, activation="relu"))
-        model.add(Dropout(0.5))  # Dropout para evitar overfitting
+        # Camada densa com regularização e dropout para prevenir overfitting
+        model.add(Dense(128, activation="relu", kernel_regularizer=l2(0.001)))
+        model.add(Dropout(0.6))
 
-        # Camada de saída (usando softmax para classificação)
-        model.add(Dense(self.num_classes, activation="softmax"))
+        model.add(Dense(self.num_classes, activation="softmax"))  # 3 saídas
 
         self.model = model
 
@@ -53,23 +44,16 @@ class RadiologyModel:
     ):
         """
         Compila o modelo com os parâmetros fornecidos.
-
-        :param optimizer: Algoritmo de otimização.
-        :param loss: Função de perda.
-        :param metrics: Lista de métricas para avaliação.
         """
         if self.model is None:
-            raise ValueError(
-                "O modelo precisa ser construído antes de ser compilado. Use build_model()."
-            )
+            raise ValueError("O modelo precisa ser construído antes de ser compilado.")
 
         self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
     def get_model(self):
         """
-        Retorna o modelo Keras construído.
+        Retorna o modelo compilado.
         """
         if self.model is None:
-            raise ValueError("O modelo ainda não foi construído. Use build_model().")
-
+            raise ValueError("O modelo ainda não foi construído.")
         return self.model

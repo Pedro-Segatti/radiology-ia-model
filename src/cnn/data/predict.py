@@ -7,10 +7,10 @@ from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
 
 class Predict:
-
-    def __init__(self, model, target_size=(256, 256, 1)):
+    def __init__(self, model, target_size=(256, 256, 1), confidence_threshold=0.6):
         self.model = model
         self.target_size = target_size
+        self.confidence_threshold = confidence_threshold
 
     def _load_image_from_path(self, image_path):
         return load_img(image_path, color_mode="grayscale", target_size=self.target_size[:2])
@@ -36,22 +36,24 @@ class Predict:
         image_array = img_to_array(image) / 255.0
         image_array = np.expand_dims(image_array, axis=0)
 
-        # Adiciona dimensão de canal para imagem em tons de cinza
-        if self.target_size[2] == 1:
+        if self.target_size[2] == 1 and image_array.shape[-1] != 1:
             image_array = np.expand_dims(image_array, axis=-1)
 
-        # Fazer a previsão
+        # Fazer predição
         predictions = self.model.predict(image_array)
+        predicted_class = np.argmax(predictions)
+        predicted_probability = predictions[0][predicted_class]
 
-        # Exibir as classes do modelo
+        # Nome das classes
         if hasattr(self.model, "classes_"):
             class_names = self.model.classes_
         else:
             class_names = ["compression", "normal", "undefined"]
 
-        # Encontrar a classe com maior probabilidade
-        predicted_class = np.argmax(predictions)
-        predicted_class_name = class_names[predicted_class]
-        predicted_probability = predictions[0][predicted_class]
+        # Classificação com limiar
+        if predicted_probability < self.confidence_threshold:
+            predicted_class_name = "undefined"
+        else:
+            predicted_class_name = class_names[predicted_class]
 
         return predicted_class, predicted_class_name, predicted_probability, predictions
