@@ -25,7 +25,11 @@ class ImageConsumer:
     def initialize_kafka(self):
         try:
             self.consumer = KafkaConsumer(
-                self.image_topic, bootstrap_servers=self.kafka_bootstrap_servers
+                self.image_topic,
+                bootstrap_servers=self.kafka_bootstrap_servers,
+                group_id="radiology-ia-consumer",
+                enable_auto_commit=True,
+                auto_offset_reset="earliest",
             )
             print("Kafka consumer initialized successfully.")
         except errors.NoBrokersAvailable:
