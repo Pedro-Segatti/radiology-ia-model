@@ -19,7 +19,6 @@ class RadiologyModel:
         """
         model = Sequential()
 
-        # Camadas convolucionais reduzidas
         model.add(Conv2D(32, (3, 3), activation="relu", input_shape=self.input_shape))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 

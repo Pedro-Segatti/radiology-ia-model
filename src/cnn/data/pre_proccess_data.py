@@ -25,7 +25,7 @@ class PreProccessData:
             batch_size=self.batch_size,
             class_mode="categorical",
             color_mode="grayscale",
-            shuffle=False  # Mantido para métricas
+            shuffle=False
         )
 
         return train_gen, val_gen

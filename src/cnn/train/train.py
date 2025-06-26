@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from sklearn.utils.class_weight import compute_class_weight  # <- Adicionado
+from sklearn.utils.class_weight import compute_class_weight
 
 from cnn.data.augment import AugmentData
 
@@ -94,7 +94,7 @@ class Train:
             validation_data=(self.x_test, self.y_test),
             epochs=self.epochs,
             callbacks=[early_stop, checkpoint],
-            class_weight=class_weight_dict  # <- Adicionado aqui
+            class_weight=class_weight_dict
         )
 
         self.save_loss_accuracy_plot(history)

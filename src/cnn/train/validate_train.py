@@ -10,16 +10,14 @@ from cnn.data.pre_proccess_data import PreProccessData
 class ValidateTrain:
     def __init__(self, model, data_path, input_shape=(256, 256, 1), output_dir="output"):
         self.model = model
-        self.data_path = data_path  # <- caminho raiz, contendo train/ e validation/
+        self.data_path = data_path  # caminho raiz, contendo train/ e validation/
         self.input_shape = input_shape
         self.output_dir = output_dir
         os.makedirs(output_dir, exist_ok=True)
 
     def validate_model(self):
-        # Usa apenas o val_gen agora, pois você já separou os dados
         _, val_gen = PreProccessData(self.data_path, target_size=self.input_shape[:2]).preprocess_data()
 
-        # Avaliação simples
         loss, accuracy = self.model.evaluate(val_gen, verbose=1)
         print(f"Validation Loss: {loss:.4f}, Validation Accuracy: {accuracy:.4f}")
 
